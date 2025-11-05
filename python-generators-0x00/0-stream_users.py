@@ -7,15 +7,15 @@ def stream_users():
     connection = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="root",
+        password="hqjfwkejfd",
         database="ALX_prodev"
     )
 
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM user_data;")
 
-    for row in cursor:  # ✅ Only one loop!
-        yield row  # ✅ Stream row by row
+    for row in cursor:
+        yield row  # Stream row by row
 
     cursor.close()
     connection.close()
