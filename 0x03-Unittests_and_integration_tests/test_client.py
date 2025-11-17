@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from client import GithubOrgClient
 
-# --- Imported from fixtures as to resolve the import error that I am experiencing. --#
+# --- Imported from fixtures as to resolve the import error that I am experiencing.
 org_payload = {
     "login": "google",
     "id": 1,
