@@ -12,7 +12,9 @@ from client import GithubOrgClient
 org_payload = {
     "login": "google",
     "id": 1,
-    "repos_url": "https://api.github.com/orgs/google/repos"
+    "repos_url": (
+        "https://api.github.com/orgs/google/repos"
+    )
 }
 
 repos_payload = [
