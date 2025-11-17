@@ -90,16 +90,15 @@ class TestGithubOrgClient(unittest.TestCase):
     }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """Integration test for GithubOrgClient.public_repos"""
+    """Integration tests for GithubOrgClient.public_repos"""
 
     @classmethod
     def setUpClass(cls):
         """Set up patcher for requests.get before all tests"""
-        # Assign patcher itself to cls.get_patcher (this is what checker wants)
         cls.get_patcher = patch("client.requests.get")
         cls.mock_get = cls.get_patcher.start()
 
-        # Configure the mock to return the appropriate payload
+        # Use side_effect to return correct payloads based on call order
         cls.mock_get.return_value.json.side_effect = [
             cls.org_payload,
             cls.repos_payload
@@ -116,7 +115,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(client.public_repos(), self.expected_repos)
 
     def test_public_repos_with_license(self):
-        """Test public_repos filtered by license"""
+        """Test public_repos filtered by license 'apache-2.0'"""
         client = GithubOrgClient("google")
         self.assertEqual(
             client.public_repos(license_key="apache-2.0"),
