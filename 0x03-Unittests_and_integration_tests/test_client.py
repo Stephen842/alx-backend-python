@@ -50,7 +50,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
-        """Test that public_repos returns correct repo list"""
+        """Test that public_repos returns correct list of repo names"""
         fake_url = "https://api.github.com/orgs/google/repos"
         payload = [
             {"name": "repo1"},
@@ -61,14 +61,10 @@ class TestGithubOrgClient(unittest.TestCase):
 
         client = GithubOrgClient("google")
 
-        with patch.object(
-            GithubOrgClient,
-            "_public_repos_url",
-            new_callable=property,
-            return_value=fake_url
-        ) as mock_url:
+        # Patch _public_repos_url as a normal attribute, not a property
+        with patch.object(GithubOrgClient, "_public_repos_url", fake_url):
             result = client.public_repos()
 
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
             mock_get_json.assert_called_once_with(fake_url)
-            mock_url.assert_called_once()
+
