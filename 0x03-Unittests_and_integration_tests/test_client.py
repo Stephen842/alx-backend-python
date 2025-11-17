@@ -67,4 +67,3 @@ class TestGithubOrgClient(unittest.TestCase):
 
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
             mock_get_json.assert_called_once_with(fake_url)
-
