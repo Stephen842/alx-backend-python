@@ -94,11 +94,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Set up mock for requests.get before all tests"""
+        """Set up patcher for requests.get before all tests"""
+        # Assign patcher itself to cls.get_patcher
         cls.get_patcher = patch("client.requests.get")
         cls.mock_get = cls.get_patcher.start()
 
-        # Define side_effect function for different URLs
+        # Define side_effect function for the mock
         def get_json_side_effect(url, *args, **kwargs):
             if url.endswith("/orgs/google"):
                 return cls.org_payload
