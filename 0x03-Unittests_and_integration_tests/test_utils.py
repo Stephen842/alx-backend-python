@@ -31,6 +31,7 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(nested_map, path)
         self.assertEqual(str(context.exception), repr(path[-1]))
 
+
 # Task 2
 class TestGetJson(unittest.TestCase):
     """TestCase for get_json function"""
@@ -51,6 +52,7 @@ class TestGetJson(unittest.TestCase):
             result = get_json(test_url)
             mock_get.assert_called_once_with(test_url)
             self.assertEqual(result, test_payload)
+
 
 # Task 3
 class TestMemoize(unittest.TestCase):
