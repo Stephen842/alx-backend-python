@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from client import GithubOrgClient
 
-#Import from fixtures.py the following to resolve import error
+# Import from fixtures.py the following to resolve import error
 org_payload = {
     "login": "google",
     "id": 1,
@@ -35,7 +35,6 @@ repos_payload = [
 
 expected_repos = ["repo1", "repo2", "repo3"]
 apache2_repos = ["repo1", "repo3"]
-
 
 
 class TestGithubOrgClient(unittest.TestCase):
