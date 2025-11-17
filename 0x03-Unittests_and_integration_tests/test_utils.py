@@ -8,7 +8,7 @@ from unittest.mock import patch, Mock
 
 class TestAccessNestedMap(unittest.TestCase):
     '''TestCase for access_nested_map function'''
-    ### Task 0
+    # Task 0
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
@@ -18,7 +18,7 @@ class TestAccessNestedMap(unittest.TestCase):
         """Test access_nested_map returns expected output"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
-    ### Task 1
+    # Task 1
     @parameterized.expand([
         ({}, ("a",)),
         ({"a": 1}, ("a", "b")),
@@ -27,10 +27,9 @@ class TestAccessNestedMap(unittest.TestCase):
         """Test that KeyError is raised for invalid paths"""
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
-
         self.assertEqual(str(context.exception), repr(path[-1]))
 
-### Task 2
+# Task 2
 class TestGetJson(unittest.TestCase):
     """TestCase for get_json function"""
 
@@ -40,17 +39,15 @@ class TestGetJson(unittest.TestCase):
     ])
     def test_get_json(self, test_url, test_payload):
         """Test that get_json returns expected JSON payload"""
-
         mock_response = Mock()
         mock_response.json.return_value = test_payload
 
         with patch("utils.requests.get", return_value=mock_response) as mock_get:
             result = get_json(test_url)
-
             mock_get.assert_called_once_with(test_url)
             self.assertEqual(result, test_payload)
 
-### Task 3
+# Task 3
 class TestMemoize(unittest.TestCase):
     """TestCase for memoize decorator"""
 
@@ -73,5 +70,5 @@ class TestMemoize(unittest.TestCase):
 
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
-
             mock_method.assert_called_once()
+            
