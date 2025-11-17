@@ -2,10 +2,12 @@
 """Unit tests for client.GithubOrgClient"""
 
 import unittest
+from parameterized import parameterized_class
 from parameterized import parameterized
 from unittest.mock import patch
 
 from client import GithubOrgClient
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -77,3 +79,49 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("google")
         result = client.has_license(repo, license_key)
         self.assertEqual(result, expected)
+
+
+@parameterized_class([
+    {
+        "org_payload": org_payload,
+        "repos_payload": repos_payload,
+        "expected_repos": expected_repos,
+        "apache2_repos": apache2_repos
+    }
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration test for GithubOrgClient.public_repos"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up mock for requests.get before all tests"""
+        cls.get_patcher = patch("client.requests.get")
+        cls.mock_get = cls.get_patcher.start()
+
+        # Define side_effect function for different URLs
+        def get_json_side_effect(url, *args, **kwargs):
+            if url.endswith("/orgs/google"):
+                return cls.org_payload
+            elif url.endswith("/orgs/google/repos"):
+                return cls.repos_payload
+            return None
+
+        cls.mock_get.return_value.json.side_effect = get_json_side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        """Stop patching requests.get after all tests"""
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """Test public_repos returns expected repo names"""
+        client = GithubOrgClient("google")
+        self.assertEqual(client.public_repos(), self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Test public_repos filtered by license"""
+        client = GithubOrgClient("google")
+        self.assertEqual(
+            client.public_repos(license_key="apache-2.0"),
+            self.apache2_repos
+        )
