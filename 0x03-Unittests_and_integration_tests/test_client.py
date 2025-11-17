@@ -129,7 +129,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         # Use side_effect to return correct payloads based on call order
         def side_effect(url):
-            org_url = f"https://api.github.com/orgs/{cls.org_payload['login']}"
+            org_url = (
+                f"https://api.github.com/orgs/{cls.org_payload['login']}"
+            )
 
             if url == cls.org_payload["repos_url"]:
                 return cls.repos_payload
