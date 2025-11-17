@@ -29,17 +29,16 @@ class TestGithubOrgClient(unittest.TestCase):
         )
         self.assertEqual(result, expected)
 
-    # Task 5
     def test_public_repos_url(self):
         """Test that _public_repos_url returns correct URL from org"""
-        # Mock payload for org property
         mock_payload = {
-            "repos_url": "https://api.github.com/orgs/google/repos"
+            "repos_url": (
+                "https://api.github.com/orgs/google/repos"
+            )
         }
 
         client = GithubOrgClient("google")
 
-        # Patch the org property of this client instance
         with patch.object(
             GithubOrgClient,
             "org",
@@ -49,10 +48,9 @@ class TestGithubOrgClient(unittest.TestCase):
             result = client._public_repos_url
             self.assertEqual(result, mock_payload["repos_url"])
 
-    # Task 6: More patching
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
-        """Test that public_repos returns correct list of repo names"""
+        """Test that public_repos returns correct repo list"""
         fake_url = "https://api.github.com/orgs/google/repos"
         payload = [
             {"name": "repo1"},
