@@ -13,12 +13,11 @@ class User(AbstractUser):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=50, null=False, blank=False)
     last_name = models.CharField(max_length=50, null=False, blank=False)
+    email = models.EmailField(blank=False, unique=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     password = models.CharField(max_length=128)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='guest')
     created_at = models.DateTimeField(auto_now_add=True)
-
-    email = models.EmailField(blank=False, unique=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
