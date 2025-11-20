@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_frame import viewsets, status
+from rest_frame import viewsets, status, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.decorators import action
@@ -23,6 +23,9 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     authentication_class = [TokenAuthentication, SessionAuthentication]
     permission_class = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['participants__first_name', 'participants__last_name']
+    ordering_fields = ['created_at']
 
     # A function method to add participant to an existion conversation
     @action(detail=True, methods=['post'])
@@ -55,6 +58,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     authentication_class = [TokenAuthentication, SessionAuthentication]
     permission_class = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['sender__first_name', 'sender__last_name', 'message_body']
+    ordering_fields = ['sent_at']
 
     def perform_create(self, serializer):
         '''
