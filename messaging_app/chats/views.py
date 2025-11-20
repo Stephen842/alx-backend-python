@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_frame import viewsets
+from rest_frame import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.decorators import action
@@ -23,6 +23,21 @@ class ConversationViewset(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     authentication_class = [TokenAuthentication, SessionAuthentication]
     permission_class = [IsAuthenticated]
+
+    # A function method to add participant to an existion conversation
+    @action(detail=True, methods=['post'])
+    def add_participant(self, request, pk=None):
+        conversation = self.get_object()
+        user_id = request.data.get('user_id')
+        
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        conversation.participants.add(User)
+        conversation.save()
+        return Response({'message': f'User {user_id} added to conversation.'}, status=status.HTTP_200_OK)
 
 
 # ---------------------------------
