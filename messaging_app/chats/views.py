@@ -11,7 +11,7 @@ from .serializers import MessageSerializer, ConversationSerializer
 # ---------------------------------
 # Conversation ViewSet
 #---------------------------------
-class ConversationViewset(viewsets.ModelViewSet):
+class ConversationViewSet(viewsets.ModelViewSet):
     '''
     API endpoint for conversations:
     - List all conversations
@@ -43,7 +43,7 @@ class ConversationViewset(viewsets.ModelViewSet):
 # ---------------------------------
 # Message ViewSet
 #---------------------------------
-class MessageViewset(viewsets.ModelViewSet):
+class MessageViewSet(viewsets.ModelViewSet):
     '''
     API endpoint for messages:
     - List messages
