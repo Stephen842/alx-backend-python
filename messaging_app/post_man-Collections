@@ -1,0 +1,35 @@
+{
+  "info": {
+    "_postman_id": "d2b6f1c9-1234-5678-abcd-ef9876543210",
+    "name": "Ugota Messaging API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "82383894"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Endpoints for authentication of Ugota Messaging API",
+      "item": [
+        {
+          "name": "Get JWT Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{UGOTA_EMAIL}}\",\n    \"password\": \"{{UGOTA_PASSWORD}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "127.0.0.1:8000/api/token/",
+              "host": ["127","0","0","1"],
+              "port": "8000",
+              "path": ["api","token"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
