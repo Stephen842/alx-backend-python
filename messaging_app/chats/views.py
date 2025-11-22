@@ -4,9 +4,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from .models import User, Conversation, Message
 from .serializers import MessageSerializer, ConversationSerializer
 from .permissions import IsParticipant
+from .pagination import MessagePagination
+from .filters import MessageFilter
 
 
 # ---------------------------------
@@ -59,9 +63,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     authentication_class = [TokenAuthentication, SessionAuthentication]
     permission_class = [IsAuthenticated]
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     search_fields = ['sender__first_name', 'sender__last_name', 'message_body']
-    ordering_fields = ['sent_at']
+    pagination_class = MessagePagination
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_class = MessageFilter
+    ordering = ['-sent_at']
 
     def get_queryset(self):
         conversation_id = self.request.query_params.get('conversation_id')
