@@ -26,7 +26,7 @@ class MessageSerializer(serializers.ModelSerializer):
     message_preview = serializers.CharField(source='message_body', read_only=True)
     class Meta:
         model = Message
-        fields = ['message_id', 'sender', 'conversation', 'message_body', 'sent_at']
+        fields = ['message_id', 'sender', 'conversation', 'message_body', 'sent_at', 'message_preview']
         read_only_fields = ['sent_at']
 
     def validate_message_body(self, value):

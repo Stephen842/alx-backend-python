@@ -13,6 +13,7 @@ class User(AbstractUser):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=50, null=False, blank=False)
     last_name = models.CharField(max_length=50, null=False, blank=False)
+    username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(blank=False, unique=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     password = models.CharField(max_length=128)
@@ -20,7 +21,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name',]
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
     class Meta:
         indexes = [

@@ -83,7 +83,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         Automatically set the sender to be the current signed in user
         '''
         conversation_id = self.request.data.get('conversation_id')
-        if not self.request.user.conversations.filter(id=conversation_id).exists():
+        if not self.request.user.conversations.filter(conversation_id=conversation_id).exists():
             return Response(
                 {'detail': 'You are not a participant of this conversation.'},
                 status=status.HTTP_403_FORBIDDEN
