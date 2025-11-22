@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from rest_frame import viewsets, status, filters
+from rest_framework import viewsets, status, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import User, Conversation, Message
 from .serializers import MessageSerializer, ConversationSerializer
+from .permissions import IsParticipant
 
 
 # ---------------------------------
@@ -22,7 +23,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     authentication_class = [TokenAuthentication, SessionAuthentication]
-    permission_class = [IsAuthenticated]
+    permission_class = [IsAuthenticated, IsParticipant]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     search_fields = ['participants__first_name', 'participants__last_name']
     ordering_fields = ['created_at']

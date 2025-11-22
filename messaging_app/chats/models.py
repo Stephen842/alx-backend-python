@@ -20,7 +20,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
+    REQUIRED_FIELDS = ['first_name', 'last_name',]
 
     class Meta:
         indexes = [
