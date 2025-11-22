@@ -63,8 +63,23 @@ class MessageViewSet(viewsets.ModelViewSet):
     search_fields = ['sender__first_name', 'sender__last_name', 'message_body']
     ordering_fields = ['sent_at']
 
+    def get_queryset(self):
+        conversation_id = self.request.query_params.get('conversation_id')
+        if conversation_id:
+            return Message.objects.filter(
+                conversation__id = conversation_id
+                conversation__participants = self.request.user
+            )
+        return Message.objects.none()
+
     def perform_create(self, serializer):
         '''
         Automatically set the sender to be the current signed in user
         '''
+        conversation_id = self.request.data.get('conversation_id')
+        if not self.request.user.conversations.filter(id=conversation_id).exists():
+            return Response(
+                {'detail': 'You are not a participant of this conversation.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
         serializer.save(sender=self.request.user)
