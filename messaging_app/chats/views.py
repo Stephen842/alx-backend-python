@@ -73,7 +73,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation_id = self.request.query_params.get('conversation_id')
         if conversation_id:
             return Message.objects.filter(
-                conversation__id = conversation_id
+                conversation__id = conversation_id,
                 conversation__participants = self.request.user
             )
         return Message.objects.none()
