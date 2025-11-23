@@ -7,7 +7,7 @@ class RequestLoggingMiddleware:
         self.get_response = get_response
 
         ### This line ensures that the request.log file exists and if it doesn't it should be created
-        self.log_file = os.path.join(os.path.dirname(__file__), 'request.log')
+        self.log_file = os.path.join(os.path.dirname(__file__), 'requests.log')
         if not os.path.exists(self.log_file):
             open(self.log_file, 'w').close()
 
