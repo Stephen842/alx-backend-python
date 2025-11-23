@@ -25,6 +25,9 @@ class RequestLoggingMiddleware:
     
 
 class RestrictAccessByTimeMiddleware:
+    """
+    This function denies access to the chat outside 6AM - 9PM
+    """
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -39,6 +42,10 @@ class RestrictAccessByTimeMiddleware:
     
 
 class OffensiveLanguageMiddleware:
+    """
+    This function Limits the number of chat messages per IP address.
+    Maximum: 5 messages per 60 seconds(1 minutes).
+    """
     def __init__(self, get_response):
         self.get_response = get_response
         self.ip_requests = {}
@@ -67,9 +74,30 @@ class OffensiveLanguageMiddleware:
         return response
     
     def get_client_ip(self, request):
+        """
+        This method retrieves the IP address from request headers
+        """
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
             ip = x_forwarded_for.split(',')[0]
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+
+
+class RolepermissionMiddleware:
+    """
+    This class based function with it methods restricts access to chat actions based on user role.
+    Only 'admin' or 'moderator' roles are allowed.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.path.startswith('/chat'):
+            user = getattr(request, 'user', None)
+            if not (user and user.is_authenticated and getattr(user, 'role', None) in ['admin', 'moderator']):
+                return HttpResponseForbidden('You do not have permission to perform this action.')
+            
+        response = self.get_response(request)
+        return response
