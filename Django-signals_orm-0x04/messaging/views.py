@@ -23,20 +23,14 @@ def delete_user(request):
 def threaded_conversation(request, user_id):
     ''' Retrieve all messages between the current user and another user, optimizing database querying '''
 
-    messages = (
-        Message.objects.filter(
-            sender = request.user,
-            reciever_id = user_id
-        )
-        |
-        Message.objects.filter(
-            sender_id = user_id,
-            reciever = request.user
-        )
-    )
-
-    messages = messages.select_related('sender', 'reciever', 'parent_message') \
-                        .prefetch_related('replies')
+    messages = Message.objects.filter(
+        sender = request.user,
+        reciever=user_id
+    ).select_related(
+        'sender',
+        'receiver',
+        'parent_message'
+    ).prefetch_related('replies')
     
     conversation = []
 
