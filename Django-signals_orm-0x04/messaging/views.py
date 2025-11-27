@@ -51,3 +51,23 @@ def threaded_conversation(request, user_id):
         conversation.append(build_thread(msg))
 
     return JsonResponse({'threaded_conversation': conversation}, safe=False)
+
+
+@login_required
+def unread_inbox(request):
+    unread_messages = Message.unread.unread_for_user(request.user).only(
+        'id', 'sender', 'content', 'timestamp'
+    )
+
+    data = [
+        {
+            'id': msg.id,
+            'sender': msg.sender.username,
+            'content': msg.content,
+            'timestamp': msg.timestamp,
+        }
+
+        for msg in unread_messages
+    ]
+
+    return JsonResponse({'unread_messages': data})

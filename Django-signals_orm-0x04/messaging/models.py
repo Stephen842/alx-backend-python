@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .managers import UnreadMessagesManager
+
 
 
 class Message(models.Model):
@@ -12,7 +14,13 @@ class Message(models.Model):
     edited_at = models.DateTimeField(null=True, blank=True)
     edited_by = models.ForeignKey(User, null=True, blank=True, related_name='edited_messages', on_delete=models.SET_NULL)
 
+    read = models.BooleanField(default=False)
+
     parent_message = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+
+    unread = UnreadMessagesManager()
+
+    objects = models.Manager()
 
     def __str__(self):
         return f'From {self.sender} to {self.reciever}'
