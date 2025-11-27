@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.views.decorators.cache import cache_page
 from .models import Message
 
 
@@ -19,6 +20,7 @@ def delete_user(request):
     return JsonResponse({'message': 'User deleted successfully'})
 
 
+@cache_page(60)
 @login_required
 def threaded_conversation(request, user_id):
     ''' Retrieve all messages between the current user and another user, optimizing database querying '''
