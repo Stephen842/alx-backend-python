@@ -24,11 +24,11 @@ def threaded_conversation(request, user_id):
     ''' Retrieve all messages between the current user and another user, optimizing database querying '''
 
     messages = Message.objects.filter(
-        sender = request.user,
+        sender=request.user,
         reciever=user_id
     ).select_related(
         'sender',
-        'receiver',
+        'reciever',
         'parent_message'
     ).prefetch_related('replies')
     
