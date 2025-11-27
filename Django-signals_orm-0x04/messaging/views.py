@@ -25,10 +25,10 @@ def threaded_conversation(request, user_id):
 
     messages = Message.objects.filter(
         sender=request.user,
-        reciever=user_id
+        receiver=user_id
     ).select_related(
         'sender',
-        'reciever',
+        'receiver',
         'parent_message'
     ).prefetch_related('replies')
     
@@ -40,7 +40,7 @@ def threaded_conversation(request, user_id):
             'id': message.id,
             'content': message.content,
             'sender': message.sender.username,
-            'reciever': message.reciever.username,
+            'receiver': message.receiver.username,
             'timestamp': message.timestamp,
             'replies': [build_thread(reply) for reply in message.replies.all()]
         }
