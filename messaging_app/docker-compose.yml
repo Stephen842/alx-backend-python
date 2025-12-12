@@ -3,7 +3,7 @@ version: '3.9'
 services:
   db:
     image: mysql:8.0
-    container_name: messaging_db
+    container_name: MYSQL_DB
     restart: always
     env_file:
       - .env
@@ -21,7 +21,7 @@ services:
     build: .
     container_name: messaging_app_image
     restart: always
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
