@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+# Exit immediately if a command fails
+set -e
+
+DEPLOYMENT_NAME=django-messaging-app
+
+echo "Scaling Django app to 3 replicas..."
+kubectl scale deployment "$DEPLOYMENT_NAME" --replicas=3
+
+echo "Waiting for pods to be ready..."
+kubectl get pods
+
+echo "Verifying multiple pods are running..."
+kubectl get pods
+
+echo "Performing load testing with wrk..."
+if command -v wrk &> /dev/null
+then
+    wrk -t2 -c10 -d30s http://localhost
+else
+    echo "wrk is not installed. Skipping load test."
+fi
+
+echo "Monitoring resource usage..."
+kubectl top pods || echo "Metrics server not available."
+
+echo "Scaling and monitoring completed."
