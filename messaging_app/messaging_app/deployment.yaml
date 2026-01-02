@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-messaging-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messaging_app
+  template:
+    metadata:
+      labels:
+        app: messaging_app
+    spec:
+      containers:
+        - name: django-container
+          image: stephen842/messaging_app_image:latest
+          ports:
+            - containerPort: 8000
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-messaging-service
+spec:
+  type: ClusterIP
+  selector:
+    app: messaging_app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
