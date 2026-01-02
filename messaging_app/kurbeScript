@@ -1,0 +1,26 @@
+#!/usr/bin/env zsh
+
+# Exit immediately if a command fail
+set -e
+
+echo "Checking if Minikube is installed..."
+
+if ! command -v minikube &> /dev/null
+then
+    echo "Minikube is not installed."
+    echo "Please install Minikube before running this script."
+    exit 1
+fi
+
+echo "Minikube is installed."
+
+echo "Starting Kubernetes cluster with MiniKube..."
+minikube start
+
+echo "Verifying Kubernetes cluster status..."
+kubectl cluster-info
+
+echo "Retrieving available pods..."
+kubectl get pods --all-namespaces
+
+echo "Kubernetes local cluster is up and running"
