@@ -1,4 +1,4 @@
-name: Django CI Tests
+name: Django CI Tests + Quality
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: ["master"]
 
 jobs:
-  test:
+  test-and-quality:
     runs-on: ubuntu-latest
 
     services:
@@ -16,10 +16,12 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: yourpassword
           MYSQL_DATABASE: messagingdb
+          MYSQL_USER: messaginguser
+          MYSQL_PASSWORD: messagingpass
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost"
+          --health-cmd="mysqladmin ping -h localhost -u root -psupersecretrootpass"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -42,13 +44,34 @@ jobs:
         run: |
           cd messaging_app
           pip install -r requirements.txt
+          pip install flake8 coverage python-dotenv
 
-      - name: Run Django tests
-        env:
-          DB_HOST: 127.0.0.1
-          DB_NAME: messagingdb
-          DB_USER: root
-          DB_PASSWORD: yourpassword
+      - name: Create .env file
         run: |
           cd messaging_app
-          pytest
+          cat > .env <<EOF
+          MYSQL_ROOT_PASSWORD=yourpassword
+          MYSQL_DATABASE=messagingdb
+          MYSQL_USER=messaginguser
+          MYSQL_PASSWORD=yourpassword
+          DB_HOST=127.0.0.1
+          DB_PORT=3306
+          EOF
+
+      - name: Run flake8 linting
+        run: |
+          cd messaging_app
+          flake8 . --max-line-length=120
+
+      - name: Run tests with coverage
+        run: |
+          cd messaging_app
+          coverage run -m pytest
+          coverage report
+          coverage xml -o coverage.xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: messaging_app/coverage.xml
